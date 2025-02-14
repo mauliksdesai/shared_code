@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title>Simple Wordle</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-rows: repeat(6, 1fr);
+            gap: 5px;
+            margin: 20px;
+        }
+
+        .row {
+            display: grid;
+           grid-template-columns: repeat(5, 1fr);
+gap: 5px;
+        }
+
+        .tile {
+            width: 60px;
+            height: 60px;
+            border: 2px solid #d3d6da;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          font-size: 2em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .keyboard-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .key {
+            min-width: 40px;
+height: 50px;
+            border: none;
+border-radius: 4px;
+           background-color: #d3d6da;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .correct {
+background-color: #6aaa64;
+            color: white;
+            border-color: #6aaa64;
+        }
+
+        .present {
+          background-color: #c9b458;
+            color: white;
+            border-color: #c9b458;
+        }
+
+        .absent {
+background-color: #787c7e;
+            color: white;
+           border-color: #787c7e;
+        }
+
+        .flip {
+            animation: flip 0.5s ease forwards;
+        }
+
+        @keyframes flip {
+            0% {
+                transform: rotateX(0);
+            }
+            50% {
+               transform: rotateX(90deg);
+            }
+            100% {
+                transform: rotateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>WORDLE</h1>
+   <div id="game-board"></div>
+    <div class="keyboard"></div>
+
+    <script>
+        const WORD_LENGTH = 5;
+const MAX_GUESSES = 6;
+        let currentGuess = '';
+        let currentRow = 0;
+        
+        // Sample target word (normally you'd randomize this)
+        const TARGET_WORD = "APPLE"; 
+
+        // Initialize game board
+        const gameBoard = document.getElementById('game-board');
+        for (let i = 0; i < MAX_GUESSES; i++) {
+            const row = document.createElement('div');
+            row.className = 'row';
+            for (let j = 0; j < WORD_LENGTH; j++) {
+                const tile = document.createElement('div');
+                tile.className = 'tile';
+                row.appendChild(tile);
+            }
+            gameBoard.appendChild(row);
+        }
+
+        // Initialize keyboard
+        const keyboard = document.querySelector('.keyboard');
+        const keyboardLayout = [
+          ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
+            ['Enter', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '⌫']
+        ];
+
+        keyboardLayout.forEach(row => {
+            const keyboardRow = document.createElement('div');
+            keyboardRow.className = 'keyboard-row';
+            row.forEach(key => {
+                const button = document.createElement('button');
+                button.className = 'key';
+                button.textContent = key;
+                button.addEventListener('click', () => handleInput(key));
+                keyboardRow.appendChild(button);
+            });
+ keyboard.appendChild(keyboardRow);
+        });
+
+        // Handle user input
+        function handleInput(key) {
+            if (key === '⌫') {
+                if (currentGuess.length > 0) {
+                    currentGuess = currentGuess.slice(0, -1);
+                    updateTiles();
+                }
+            } else if (key === 'Enter') {
+                if (currentGuess.length === WORD_LENGTH) {
+                    checkGuess();
+                    currentGuess = '';
+                    currentRow++;
+                }
+            } else if (currentGuess.length < WORD_LENGTH) {
+                currentGuess += key.toUpperCase();
+                updateTiles();
+            }
+        }
+
+        // Update tiles display
+function updateTiles() {
+            const row = gameBoard.children[currentRow];
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                const tile = row.children[i];
+                tile.textContent = currentGuess[i] || '';
+            }
+        }
+
+        // Check the current guess
+        function checkGuess() {
+            const row = gameBoard.children[currentRow];
+            const targetLetters = TARGET_WORD.split('');
+            const guessLetters = currentGuess.split('');
+
+            // First pass: check for correct letters
+           guessLetters.forEach((letter, i) => {
+                if (letter === targetLetters[i]) {
+                    targetLetters[i] = null;
+                    row.children[i].classList.add('correct');
+                }
+            });
+
+            // Second pass: check for present letters
+           guessLetters.forEach((letter, i) => {
+                if (targetLetters.includes(letter) && letter !== targetLetters[i]) {
+                    targetLetters[targetLetters.indexOf(letter)] = null;
+                    row.children[i].classList.add('present');
+                } else if (!row.children[i].classList.contains('correct')) {
+ row.children[i].classList.add('absent');
+                }
+            });
+
+            // Add flip animation
+            Array.from(row.children).forEach((tile, i) => {
+                setTimeout(() => tile.classList.add('flip'), i * 200);
+            });
+
+            // Check win condition
+            if (currentGuess === TARGET_WORD) {
+                setTimeout(() => alert('Congratulations! You won!'), 1500);
+            } else if (currentRow === MAX_GUESSES - 1) {
+                setTimeout(() => alert(`Game over! The word was ${TARGET_WORD}`), 1500);
+            }
+        }
+
+        // Handle physical keyboard input
+       document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleInput('Enter');
+            else if (e.key === 'Backspace') handleInput('⌫');
+            else if (/^[a-zA-Z]$/.test(e.key)) handleInput(e.key.toUpperCase());
+        });
+    </script>
+</body>
+</html>
