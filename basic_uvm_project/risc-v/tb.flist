@@ -1,0 +1,24 @@
++define+V_DUT_TOP=tb_top
+
++incdir+$TB_ROOT/defines
++incdir+$TB_ROOT/shared
++incdir+$TB_ROOT/design
++incdir+$TB_ROOT/tb
++incdir+$TB_ROOT/tb/interfaces
++incdir+$TB_ROOT/tb/top
++incdir+$TB_ROOT/tb/agents
++incdir+$TB_ROOT/tb/env
++incdir+$TB_ROOT/tb/tests
++incdir+$TB_ROOT/tb/sequences
++incdir+$TB_ROOT/tb/checkers
+
+$TB_ROOT/shared/defines.svh
+$TB_ROOT/tb/interfaces/instr_intf.sv
+$TB_ROOT/design/risc-v.sv
+$TB_ROOT/tb/top/tb_top_pkg.sv
+$TB_ROOT/tb/top/tb_top.sv
+// $TB_ROOT/tb/agents/
+// $TB_ROOT/tb/env/
+// $TB_ROOT/tb/tests/
+// $TB_ROOT/tb/sequences/
+// $TB_ROOT/tb/checkers/
