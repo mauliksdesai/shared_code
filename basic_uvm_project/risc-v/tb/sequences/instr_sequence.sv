@@ -49,7 +49,7 @@ task instr_sequence::body();
      // req.constraint_mode() etc.. 
      req.randomize() with { valid == 1'b1; };
      num_txn_sent++;
-     `uvm_info(get_name(), $sformatf("Rand Instr Generated: %0d : %s ", num_txn_sent, req.toString()), UVM_HIGH)
+     `uvm_info(get_name(), $sformatf("Rand Instr Generated: %0d ", num_txn_sent), UVM_HIGH)
      `uvm_send(req);
    end
    

@@ -25,7 +25,7 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
   logic [REG_WIDTH-1:0]  operand1 [FIFO_DEPTH-1:0];
   logic [REG_WIDTH-1:0]  result   [FIFO_DEPTH-1:0];
   logic [OP_WIDTH-1:0]   operation [FIFO_DEPTH-1:0];
-  logic [FIFO_DEPTH-1:0] vld;
+  logic                  vld       [FIFO_DEPTH-1:0];
 
   // Difference between always and always_ff/always_comb are following
   // always_ff/always_comb have specific rules enforced: and is sythesisable
@@ -40,13 +40,12 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
         end
      end
 
-     if (|vld) begin
-        for (int i = FIFO_DEPTH-1; i > 0; i++) begin 
+     for (int i = FIFO_DEPTH-1; i > 0; i++) begin 
            operand0[i] = operand0[i-1];
            operand1[i] = operand1[i-1];
            result[i]   = result[i-1];
            operation[i]= operation[i-1];
-        end
+           vld[i]      = vld[i-1];
      end
      if (valid) begin 
            operand0[0]  = rs0;

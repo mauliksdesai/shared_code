@@ -25,7 +25,7 @@ module tb_top();
    instr_intf     output_instr_if(clk);         // Instaniate an instace for output interface
    reset_intf     reset_if(clk);
 
-   riscv  #(`FIFO_DEPTH, `REG_WIDTH, `OP_WIDTH) dut (
+   riscv  #(`REG_WIDTH, `OP_WIDTH, `FIFO_DEPTH) dut (
       .clk        (clk), 
       .valid      (input_instr_if.valid),
       .opcode     (input_instr_if.opcode), 
