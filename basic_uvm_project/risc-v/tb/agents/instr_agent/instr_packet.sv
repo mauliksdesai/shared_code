@@ -14,12 +14,12 @@ class instr_packet extends uvm_sequence_item;
    rand int                     ipg;
    string                       msg;
 
-   function new(string name);
+   function new(string name = "instr_packet");
       super.new(name); 
    endfunction: new
 
    function string toString();
-      msg = $sformatf("OPCODE=%0d : RS0=%0d, RS1=%0d, RD=%0d");
+      msg = $sformatf("OPCODE=%0d : RS0=%0d, RS1=%0d, RD=%0d", opcode, rs0, rs1, rd);
    endfunction
 
    constraint delay_c { 

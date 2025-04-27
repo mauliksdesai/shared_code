@@ -13,27 +13,44 @@ class tb_env extends uvm_env;
   tb_virtual_sequence     v_seq;
   tb_virtual_sequencer    v_seqr;
   uvm_active_passive_enum is_active;
+  uvm_factory factory;
 
   function new(string name = "tb_env", uvm_component parent);
-    super.new();
+    super.new(name, parent);
   endfunction
 
-  function build_phase(uvm_phase phase);
+  function void build_phase(uvm_phase phase);
      super.build_phase(phase);
 
      v_seq            = tb_virtual_sequence::type_id::create("virtual_sequence", this);
      v_seqr           = tb_virtual_sequencer::type_id::create("virtual_sequencer", this);
      instr_agt_cfg    = instr_agent_cfg::type_id::create("input_instr_agent_cfg", this);
-     uvm_config_db#(virtual instr_intf)::get(null, "*", input_instr_intf, input_vif);
+     uvm_config_db#(virtual instr_intf)::get(null, "*", "input_instr_intf", input_vif);
+     uvm_config_db#(instr_agent_cfg)::set(null, "*", "input_instr_agt_cfg", instr_agt_cfg);
      instr_agt_cfg.vif  = input_vif;
      instr_agt          = instr_agent::type_id::create("input_instr_agent", this);
+     instr_agt.agt_cfg  = instr_agt_cfg;
+     if (instr_agt == null) begin 
+       `uvm_error(get_name(), $sformatf("Instr agent is null in build_phase"))
+     end
+     factory = uvm_factory::get();
+     `uvm_info(get_name(), $sformatf("printing uvm_factory"), UVM_NONE)
+     factory.print();
+     `uvm_info(get_name(), $sformatf("printing uvm_topology"), UVM_NONE)
+     uvm_top.print_topology();
 
   endfunction
 
 
-  function connect_phase(uvm_phase phase);
+  function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
-     v_seqr.instr_seqr = instr_agt.instr_seqr;
+     if (instr_agt == null) begin 
+       `uvm_error(get_name(), $sformatf("Instr agent is null in connect_phase"))
+     end
+     if (instr_agt.seqr == null) begin 
+       `uvm_error(get_name(), $sformatf("Instr agent seqr is null in connect_phase"))
+     end
+     v_seqr.inst_seqr = instr_agt.seqr;
      // If we were doing a scoreboard, this is where a scoreboard's
      // analysis_export would be connected with agent's analysis_port
   endfunction
@@ -44,7 +61,7 @@ class tb_env extends uvm_env;
     v_seq.start(v_seqr);
   endtask
 
-  function report_phase(uvm_phase phase);
+  function void report_phase(uvm_phase phase);
      super.report_phase(phase);
   endfunction
 

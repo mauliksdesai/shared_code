@@ -8,16 +8,16 @@
 `ifndef INSTR_SEQR_SV
 `define INSTR_SEQR_SV
 
-class instr_seqr extends uvm_sequencer; 
+class instr_seqr extends uvm_sequencer #(instr_packet); 
   `uvm_component_utils(instr_seqr);
   // uvm_analysis_export #(instr_packet)   instr_packet_export;
   // uvm_tlm_analysis_fifo #(input_packet) instr_tlm_analyis_fifo;
 
   extern function new(string name, uvm_component parent);
-  extern function build_phase(uvm_phase phase);
-  extern function connect_phase(uvm_phase phase);
+  extern function void build_phase(uvm_phase phase);
+  extern function void connect_phase(uvm_phase phase);
   extern task run_phase(uvm_phase phase);
-  extern function report_phase(uvm_phase phase);
+  extern function void report_phase(uvm_phase phase);
 
 endclass
 
@@ -25,18 +25,18 @@ function instr_seqr::new(string name, uvm_component parent);
   super.new(name, parent);
 endfunction
 
-function instr_seqr::build_phase(uvm_phase phase); 
+function void instr_seqr::build_phase(uvm_phase phase); 
   super.build_phase(phase);
   // TODO(Fifo not needed)
   // instr_tlm_analysis_fifo = new("instr_packet_fifo", this);
   // instr_packet_export.connect(instr_tlm_analysis_fifo.analysis_export);
 endfunction
 
-function instr_seqr::connect_phase(uvm_phase phase); 
+function void instr_seqr::connect_phase(uvm_phase phase); 
   super.connect_phase(phase);
 endfunction
 
-function instr_seqr::report_phase(uvm_phase phase); 
+function void instr_seqr::report_phase(uvm_phase phase); 
   super.report_phase(phase);
 endfunction
 

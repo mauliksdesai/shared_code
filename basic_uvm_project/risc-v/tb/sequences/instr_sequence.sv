@@ -43,8 +43,6 @@ endtask
 
 task instr_sequence::body();
    `uvm_info(get_name(), $sformatf("Entering Body"), UVM_HIGH)
-   RESET_DONE.wait_trigger();
-   `uvm_info(get_name(), $sformatf("RESET_DONE"), UVM_HIGH)
 
    repeat(num_instructions) begin 
      `uvm_create(req);
@@ -52,7 +50,6 @@ task instr_sequence::body();
      req.randomize() with { valid == 1'b1; };
      num_txn_sent++;
      `uvm_info(get_name(), $sformatf("Rand Instr Generated: %0d : %s ", num_txn_sent, req.toString()), UVM_HIGH)
-     pkt.randomize(); 
      `uvm_send(req);
    end
    

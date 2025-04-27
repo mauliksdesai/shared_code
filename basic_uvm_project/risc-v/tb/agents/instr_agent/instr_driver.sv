@@ -17,31 +17,31 @@ class instr_driver extends uvm_driver #(instr_packet);
   uvm_event              RESET_DONE;
 
   extern function new(string name, uvm_component parent);
-  extern function build_phase(uvm_phase phase);
-  extern function connect_phase(uvm_phase phase);
+  extern function void build_phase(uvm_phase phase);
+  extern function void connect_phase(uvm_phase phase);
   extern task run_phase(uvm_phase phase);
-  extern function report_phase(uvm_phase phase);
+  extern function void report_phase(uvm_phase phase);
   extern task drive_packets();
   
 endclass
 
 function instr_driver::new(string name, uvm_component parent); 
-  super.new(parent, name);
+  super.new(name, parent);
   RESET_DONE = uvm_event_pool::get_global("RESET_DONE");
 endfunction
 
-function instr_driver::build_phase(uvm_phase phase); 
+function void instr_driver::build_phase(uvm_phase phase); 
   super.build_phase(phase);
   if (vif == null) begin 
      `uvm_fatal(get_name(), $sformatf("Virtual interface not provided as expected"))
   end
 endfunction
 
-function instr_driver::connect_phase(uvm_phase phase); 
+function void instr_driver::connect_phase(uvm_phase phase); 
   super.connect_phase(phase);
 endfunction
 
-function instr_driver::report_phase(uvm_phase phase); 
+function void instr_driver::report_phase(uvm_phase phase); 
   super.report_phase(phase);
 endfunction
 
@@ -64,18 +64,18 @@ task instr_driver::drive_packets();
 
      // You may have to wait for hop credits before drivig 
      // In otherwords, if the txn has to wait for 
-     vif.drv_cb.valid  = req.valid;
-     vif.drv_cb.opcode = req.opcode;
-     vif.drv_cb.rs0    = req.rs0;
-     vif.drv_cb.rs1    = req.rs1;
-     vif.drv_cb.rd     = req.rd;
+     vif.drv_cb.valid  <= req.valid;
+     vif.drv_cb.opcode <= req.opcode;
+     vif.drv_cb.rs0    <= req.rs0;
+     vif.drv_cb.rs1    <= req.rs1;
+     vif.drv_cb.rd     <= req.rd;
      @vif.drv_cb;
-     vif.drv_cb.valid  = 0;
-     vif.drv_cb.opcode = 0;
-     vif.drv_cb.rs0    = 0;
-     vif.drv_cb.rs1    = 0;
-     vif.drv_cb.rd     = 0;
-     repeat (req.ipg) @vif.cb_drv;
+     vif.drv_cb.valid  <= 0;
+     vif.drv_cb.opcode <= 0;
+     vif.drv_cb.rs0    <= 0;
+     vif.drv_cb.rs1    <= 0;
+     vif.drv_cb.rd     <= 0;
+     repeat (req.ipg) @vif.drv_cb;
 
      seq_item_port.item_done();
    end

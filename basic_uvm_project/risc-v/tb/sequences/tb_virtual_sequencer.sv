@@ -17,11 +17,11 @@ class tb_virtual_sequencer extends uvm_sequencer;
      super.new(name, parent); 
    endfunction
 
-   function build_phase(uvm_phase phase);
+   function void build_phase(uvm_phase phase);
       super.build_phase(phase);
    endfunction
 
-   function connect_phase(uvm_phase phase);
+   function void connect_phase(uvm_phase phase);
      super.connect_phase(phase);
    endfunction
 

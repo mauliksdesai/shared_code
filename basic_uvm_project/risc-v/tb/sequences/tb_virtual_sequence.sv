@@ -22,17 +22,18 @@ class tb_virtual_sequence extends uvm_sequence;
    endfunction
 
    task pre_start(); 
-      RESET_DONE.wait_trigger();
       if (starting_phase != null) begin 
          starting_phase.raise_objection(this);
       end
    endtask 
 
    task body(); 
-     `uvm_info(get_name(), $sformatf("Virtual sequence body"), UVM_HIGH)
+     `uvm_info(get_name(), $sformatf("Virtual sequence body"), UVM_LOW)
+      RESET_DONE.wait_trigger();
+     `uvm_info(get_name(), $sformatf("Virtual sequence body: RESET_DONE"), UVM_LOW)
 
      fork 
-        `uvm_do_on(instr_seq, p_sequencer.instr_seqr);
+        `uvm_do_on(instr_seq, p_sequencer.inst_seqr);
      join
    endtask 
 

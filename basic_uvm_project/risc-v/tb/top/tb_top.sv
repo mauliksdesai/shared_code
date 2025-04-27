@@ -42,10 +42,10 @@ module tb_top();
       .reset      (reset_if.reset)
    );
 
-   // initial begin 
-   //   run_test();      // if the run_test function is called without any argument, test defined
-   //                    // with +UVM_TESTNAME env variable will be run..
-   // end
+   initial begin 
+     run_test();      // if the run_test function is called without any argument, test defined
+                      // with +UVM_TESTNAME env variable will be run..
+   end
 
    initial begin
                                // Scope pointer, which is null because it's at highest level
@@ -54,12 +54,11 @@ module tb_top();
       uvm_config_db#(virtual instr_intf)::set(null, "*", "output_instr_intf", output_instr_if);
       uvm_config_db#(virtual reset_intf)::set(null, "*", "reset_if", reset_if);
 
-      reset_if.reset = 1'b1;
-      @(posedge clk);
-      reset_if.reset = 1'b0;
+      // reset_if.reset = 1'b1;
+      // @(posedge clk);
+      // reset_if.reset = 1'b0;
 
-      repeat(5) @(posedge clk);
-      $finish;
+      // repeat(5) @(posedge clk);
    end
 
    initial begin 

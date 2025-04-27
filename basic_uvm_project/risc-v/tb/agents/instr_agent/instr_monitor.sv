@@ -16,10 +16,10 @@ class instr_monitor extends uvm_monitor;
   uvm_analysis_port #(instr_packet)   instr_ap;
 
   extern function new(string name, uvm_component parent);
-  extern function build_phase(uvm_phase phase);
-  extern function connect_phase(uvm_phase phase);
+  extern function void build_phase(uvm_phase phase);
+  extern function void connect_phase(uvm_phase phase);
   extern task run_phase(uvm_phase phase);
-  extern function report_phase(uvm_phase phase);
+  extern function void report_phase(uvm_phase phase);
 
   extern task sample_packets();
 
@@ -30,19 +30,19 @@ function instr_monitor::new(string name, uvm_component parent);
   instr_ap = new("instr_ap", this);
 endfunction
 
-function instr_monitor::build_phase(uvm_phase phase); 
+function void instr_monitor::build_phase(uvm_phase phase); 
   super.build_phase(phase);
   if (vif == null) begin 
    `uvm_fatal(get_name(), $sformatf("Virtual interface is not setup correctly"))
   end
 endfunction
 
-function instr_monitor::connect_phase(uvm_phase phase); 
+function void instr_monitor::connect_phase(uvm_phase phase); 
   super.connect_phase(phase);
   // Nothing needs to be connected here..
 endfunction
 
-function instr_monitor::report_phase(uvm_phase phase); 
+function void instr_monitor::report_phase(uvm_phase phase); 
   super.report_phase(phase);
   `uvm_info(get_name(), $sformatf("Total Transactions seen : %0d", num_packets), UVM_LOW)
 endfunction
