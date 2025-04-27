@@ -7,7 +7,7 @@ RUN_DIR=${TB_ROOT}/build_dir
 
 VCS_FLAGS=-sverilog -ntb_opts uvm-1.1 -debug_pp -kdb -debug_access -lca +vcs+lic_wait -full64 -reportstats
 
-UVM_FLAGS=+UVM_VERBOSITY=${UVM_VERBOSITY}
+UVM_FLAGS=+UVM_VERBOSITY=${UVM_VERBOSITY}  +UVM_TESTNAME=test_base
 
 FLIST=$(TB_ROOT)/tb.flist 
 
@@ -25,4 +25,4 @@ run_vcs:
 	rm -rf ${RUN_DIR} && \
 	mkdir ${RUN_DIR} && \
 	cd ${RUN_DIR} && \
-	${BUILD_DIR}/simv -l vcs.log  $
+	${BUILD_DIR}/simv ${UVM_FLAGS} -l vcs.log  $

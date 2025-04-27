@@ -7,6 +7,7 @@
 +incdir+$TB_ROOT/tb/interfaces
 +incdir+$TB_ROOT/tb/top
 +incdir+$TB_ROOT/tb/agents
++incdir+$TB_ROOT/tb/agents/instr_agent/
 +incdir+$TB_ROOT/tb/env
 +incdir+$TB_ROOT/tb/tests
 +incdir+$TB_ROOT/tb/sequences
@@ -17,8 +18,8 @@ $TB_ROOT/tb/interfaces/instr_intf.sv
 $TB_ROOT/design/risc-v.sv
 $TB_ROOT/tb/top/tb_top_pkg.sv
 $TB_ROOT/tb/top/tb_top.sv
-// $TB_ROOT/tb/agents/
-// $TB_ROOT/tb/env/
-// $TB_ROOT/tb/tests/
-// $TB_ROOT/tb/sequences/
+$TB_ROOT/tb/agents/instr_agent/instr_agent_pkg.sv
+$TB_ROOT/tb/sequences/tb_sequences_pkg.sv
+$TB_ROOT/tb/env/tb_env_pkg.sv
+$TB_ROOT/tb/tests/tb_test_pkg.sv
 // $TB_ROOT/tb/checkers/
