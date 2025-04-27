@@ -25,7 +25,7 @@ class test_base extends uvm_test;
       top_cfg = top_config::type_id::create("top_config", this);
       // $value$plusargs("num_instructions", num_instructions);
       // `uvm_info(get_name(), $sformatf("num instructions = %0d", num_instructions), UVM_NONE);
-      num_instructions = 2;
+      num_instructions = 20;
       `uvm_info(get_name(), $sformatf("num instructions = %0d", num_instructions), UVM_NONE);
       uvm_config_db#(int)::set(null, "*", "num_instructions", num_instructions);
 

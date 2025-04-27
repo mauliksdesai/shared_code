@@ -10,6 +10,11 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
       input logic                  valid,
       input logic                  reset,
       
+      output logic                  ld_req,
+      output logic [3:0]            addr,
+      input  logic [9:0]            data,
+      input  logic                  data_valid,
+
       output logic                  ack,
       output logic [REG_WIDTH-1:0]  rs0_out, 
       output logic [REG_WIDTH-1:0]  rs1_out, 
@@ -21,16 +26,21 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
   localparam fifo_depth = FIFO_DEPTH;
 
   // NOTE: These are unpacked array. 
-  logic [REG_WIDTH-1:0]  operand0 [FIFO_DEPTH-1:0];
-  logic [REG_WIDTH-1:0]  operand1 [FIFO_DEPTH-1:0];
-  logic [REG_WIDTH-1:0]  result   [FIFO_DEPTH-1:0];
-  logic [OP_WIDTH-1:0]   operation [FIFO_DEPTH-1:0];
-  logic                  vld       [FIFO_DEPTH-1:0];
+  logic [REG_WIDTH-1:0]  operand0;
+  logic [REG_WIDTH-1:0]  operand1;
+  logic [REG_WIDTH-1:0]  result;
+  logic [OP_WIDTH-1:0]   operation;
+  logic                  vld;
+
+  logic                  load_req;
+  logic [3:0]            load_addr;
+  logic [9:0]            load_data;
+  logic                  load_data_valid;
 
   // Difference between always and always_ff/always_comb are following
   // always_ff/always_comb have specific rules enforced: and is sythesisable
   // always_ff would enforce some flip-flop related rules
-  always_ff @(posedge clk) begin 
+  always @(posedge clk) begin 
      if (reset)  begin 
         for (int i = 0; i < FIFO_DEPTH; i++) begin 
            operand0[i] = 'b0;
@@ -40,34 +50,43 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
         end
      end
 
-     for (int i = FIFO_DEPTH-1; i > 0; i++) begin 
-           operand0[i] = operand0[i-1];
-           operand1[i] = operand1[i-1];
-           result[i]   = result[i-1];
-           operation[i]= operation[i-1];
-           vld[i]      = vld[i-1];
+     if (data_valid) begin
+       load_data = data;
+       load_data_valid = data_valid;
      end
+
      if (valid) begin 
-           operand0[0]  = rs0;
-           operand1[0]  = rs1;
-           result[0]    = rd;
-           operation[0] = opcode;
-           vld[0]       = valid;
+           operand0  = rs0;
+           operand1  = rs1;
+           result    = rd;
+           operation = opcode;
+           vld       = valid;
+
+           if (opcode == 'b0) begin
+              load_req   = 1'b1;
+              load_addr  = load_addr + 1;
+           end else
+              load_req = 1'b0;
      end
      else begin 
-           operand0[0]  = 'b0;
-           operand1[0]  = 'b0;
-           result[0]    = 'b0;
-           operation[0] = 'b0;
-           vld[0]       = 'b0;
+           operand0  = 'b0;
+           operand1  = 'b0;
+           result   = 'b0;
+           operation = 'b0;
+           vld       = 'b0;
+
+           load_req    = 'b0;
      end
   end
 
-  assign ack        = vld[FIFO_DEPTH];
-  assign rs0_out    = operand0[FIFO_DEPTH];
-  assign rs1_out    = operand0[FIFO_DEPTH];
-  assign rd_out     = result[FIFO_DEPTH];
-  assign opcode_out = operation[FIFO_DEPTH];
+  assign ack        = vld;
+  assign rs0_out    = operand0;
+  assign rs1_out    = operand1;
+  assign rd_out     = result;
+  assign opcode_out = operation;
+
+  assign ld_req     = load_req;
+  assign addr       = load_addr;
 
 endmodule
 

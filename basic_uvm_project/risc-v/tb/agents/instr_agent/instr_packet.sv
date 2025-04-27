@@ -26,4 +26,8 @@ class instr_packet extends uvm_sequence_item;
       ipg dist { 0:=10, [2:4]:=80, [10:15]:=10 };
    };
 
+   constraint half_load { 
+      opcode dist { 0:=50, [1:20]:/50 }; 
+   };
+
 endclass
