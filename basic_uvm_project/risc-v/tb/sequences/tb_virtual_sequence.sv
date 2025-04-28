@@ -15,6 +15,7 @@ class tb_virtual_sequence extends uvm_sequence;
    `uvm_declare_p_sequencer(tb_virtual_sequencer);
 
    instr_sequence     instr_seq;
+   load_sequence      load_req_seq;
    uvm_event          RESET_DONE = uvm_event_pool::get_global("RESET_DONE");
 
    function new(string name = "virtual_sequence");
@@ -34,6 +35,7 @@ class tb_virtual_sequence extends uvm_sequence;
 
      fork 
         `uvm_do_on(instr_seq, p_sequencer.inst_seqr);
+        `uvm_do_on(load_req_seq, p_sequencer.load_req_seqr);
      join
    endtask 
 

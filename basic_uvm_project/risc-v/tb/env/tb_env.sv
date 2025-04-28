@@ -7,9 +7,14 @@
 class tb_env extends uvm_env;
   `uvm_component_utils(tb_env);
 
+  virtual load_intf       load_vif;
   virtual instr_intf      input_vif;
   instr_agent_cfg         instr_agt_cfg;
   instr_agent             instr_agt;
+
+  load_agent_cfg          load_agt_cfg;
+  load_rsp_agent          load_agt;
+
   tb_virtual_sequence     v_seq;
   tb_virtual_sequencer    v_seqr;
   uvm_active_passive_enum is_active;
@@ -27,6 +32,13 @@ class tb_env extends uvm_env;
      instr_agt_cfg    = instr_agent_cfg::type_id::create("input_instr_agent_cfg", this);
      uvm_config_db#(virtual instr_intf)::get(null, "*", "input_instr_intf", input_vif);
      uvm_config_db#(instr_agent_cfg)::set(null, "*", "input_instr_agt_cfg", instr_agt_cfg);
+
+     load_agt_cfg     = load_agent_cfg::type_id::create("load_req_agent_cfg", this);
+     uvm_config_db#(virtual load_intf)::get(null, "*", "load_rsp_if", load_vif);
+     load_agt_cfg.vif  = load_vif;
+     load_agt         = load_rsp_agent::type_id::create("load_req_agent", this);
+     load_agt.load_agt_cfg = load_agt_cfg;
+
      instr_agt_cfg.vif  = input_vif;
      instr_agt          = instr_agent::type_id::create("input_instr_agent", this);
      instr_agt.agt_cfg  = instr_agt_cfg;
@@ -51,6 +63,8 @@ class tb_env extends uvm_env;
        `uvm_error(get_name(), $sformatf("Instr agent seqr is null in connect_phase"))
      end
      v_seqr.inst_seqr = instr_agt.seqr;
+     v_seqr.load_req_seqr = load_agt.seqr;
+     // TODO(maulikd) load_agt.driver.drv_export.connect()
      // If we were doing a scoreboard, this is where a scoreboard's
      // analysis_export would be connected with agent's analysis_port
   endfunction

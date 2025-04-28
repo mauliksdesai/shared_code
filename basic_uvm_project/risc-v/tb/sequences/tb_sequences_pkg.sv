@@ -7,6 +7,7 @@
 package tb_sequences_pkg;
 import uvm_pkg::*;
 import instr_agent_pkg::*;
+import load_agent_pkg::*;
 `include "uvm_macros.svh"
 
 `include "instr_sequence.sv"

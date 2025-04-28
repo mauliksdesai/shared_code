@@ -24,6 +24,7 @@ module tb_top();
    instr_intf     input_instr_if(clk);          // Instaniate an instace for input interface
    instr_intf     output_instr_if(clk);         // Instaniate an instace for output interface
    reset_intf     reset_if(clk);
+   load_intf      load_rsp_if(clk);
 
    riscv  #(`REG_WIDTH, `OP_WIDTH, `FIFO_DEPTH) dut (
       .clk        (clk), 
@@ -39,6 +40,11 @@ module tb_top();
       .rs1_out    (output_instr_if.rs1),
       .rd_out     (output_instr_if.rd),
 
+      .ld_req     (load_rsp_if.load_req),
+      .addr       (load_rsp_if.load_addr), 
+      .data       (load_rsp_if.load_data),
+      .data_valid (load_rsp_if.data_valid),
+
       .reset      (reset_if.reset)
    );
 
@@ -53,6 +59,7 @@ module tb_top();
       uvm_config_db#(virtual instr_intf)::set(null, "*", "input_instr_intf", input_instr_if);
       uvm_config_db#(virtual instr_intf)::set(null, "*", "output_instr_intf", output_instr_if);
       uvm_config_db#(virtual reset_intf)::set(null, "*", "reset_if", reset_if);
+      uvm_config_db#(virtual load_intf)::set(null, "*", "load_rsp_if", load_rsp_if);
 
       // reset_if.reset = 1'b1;
       // @(posedge clk);

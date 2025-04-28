@@ -64,7 +64,7 @@ module riscv #(parameter REG_WIDTH = 5, parameter OP_WIDTH = 7, parameter FIFO_D
 
            if (opcode == 'b0) begin
               load_req   = 1'b1;
-              load_addr  = load_addr + 1;
+              load_addr  = $urandom_range(0, 3);
            end else
               load_req = 1'b0;
      end
