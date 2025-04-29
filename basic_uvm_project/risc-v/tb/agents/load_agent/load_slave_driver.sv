@@ -7,11 +7,9 @@ class load_slave_driver extends uvm_driver #(load_packet);
    `uvm_component_utils(load_slave_driver);
 
    virtual load_intf                       vif;
-   uvm_analysis_export                     drv_export;
 
    function new(string name ="load_slave_driver", uvm_component parent);
       super.new(name, parent);
-      // drv_export = new("load_slave_drv_export", this);
    endfunction 
 
    function void build_phase(uvm_phase phase);

@@ -12,7 +12,7 @@ class tb_virtual_sequencer extends uvm_sequencer;
    `uvm_component_utils(tb_virtual_sequencer);
 
    instr_seqr              inst_seqr;
-   load_req_sequencer      load_req_seqr;
+   load_req_resp_sequencer ld_req_resp_seqr;
 
    function new(string name = "tb_virtual_sequener", uvm_component parent);
      super.new(name, parent); 

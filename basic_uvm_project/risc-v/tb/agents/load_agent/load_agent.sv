@@ -11,7 +11,6 @@ class load_rsp_agent extends uvm_agent;
   load_slave_driver   driver;
   load_monitor        monitor;
   load_req_sequencer  seqr; 
-  load_sequence       seq;
 
   uvm_analysis_port  #(load_packet)  agent_ap;
 
