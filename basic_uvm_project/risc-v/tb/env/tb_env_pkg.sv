@@ -6,6 +6,7 @@ import uvm_pkg::*;
 import instr_agent_pkg::*;
 import load_agent_pkg::*;
 import tb_sequences_pkg::*;
+import tb_scoreboard_pkg::*;
 
 `include "tb_env.sv"
 

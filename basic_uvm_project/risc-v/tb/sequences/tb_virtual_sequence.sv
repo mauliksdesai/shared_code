@@ -34,6 +34,15 @@ class tb_virtual_sequence extends uvm_sequence;
      `uvm_info(get_name(), $sformatf("Virtual sequence body: RESET_DONE"), UVM_LOW)
 
      fork 
+        // begin: instr_seq_start
+        //    instr_seq.set_sequencer(p_sequencer.inst_seqr);
+        //    instr_seq.start(p_sequencer.inst_seqr, starting_phase);
+        // end
+        // begin 
+        //    load_req_seq.set_sequencer(p_sequencer.load_req_seqr);
+        //    load_req_seq.start(p_sequencer.load_req_seqr, starting_phase);
+        // end
+      
         `uvm_do_on(instr_seq, p_sequencer.inst_seqr);
         `uvm_do_on(load_req_seq, p_sequencer.load_req_seqr);
      join
