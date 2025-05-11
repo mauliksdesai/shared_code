@@ -36,7 +36,7 @@ class load_req_resp_agent extends uvm_agent;
         if (cfg.is_active == UVM_ACTIVE)begin
             mon.ld_req_ap.connect(agent_ap);
             mon.ld_req_ap.connect(seqr.ld_req_export);
-            // drv.seq_item_port.connect(seqr.seq_item_export);
+            drv.seq_item_port.connect(seqr.seq_item_export);
         end
     endfunction
 

@@ -64,6 +64,7 @@ class tb_env extends uvm_env;
      end
      v_seqr.inst_seqr     = instr_agt.seqr;
      v_seqr.ld_req_resp_seqr = ld_req_resp_agt.seqr;
+     `uvm_info(get_name(), "ENV Connect phase", UVM_LOW)
      // TODO(maulikd) load_agt.driver.drv_export.connect()
      // If we were doing a scoreboard, this is where a scoreboard's
      // analysis_export would be connected with agent's analysis_port
@@ -71,6 +72,7 @@ class tb_env extends uvm_env;
 
   task run_phase(uvm_phase phase); 
     super.run_phase(phase);
+    `uvm_info(get_name(), "ENV Run phase", UVM_LOW)
     v_seq.starting_phase = phase;
     v_seq.start(v_seqr);
   endtask
